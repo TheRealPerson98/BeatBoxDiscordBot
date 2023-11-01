@@ -1,0 +1,22 @@
+{
+  "DISCORD_GUILD_ID": "1152659783439097966",
+  "prefix": "!",
+  "invite_link": "https://discord.com/api/oauth2/authorize?client_id=1164214163485245533&permissions=8&scope=bot",
+
+  "bot_name": "Beat Box Bot",
+  "bot_icon_url": "https://i.imgur.com/uIb860p.png",
+
+  "welcome_channel_id": "your-welcome-channel-id",
+  "rules_channel_id": "your-rules-channel-id",
+  "announcements_channel_id": "your-announcements-channel-id",
+  "introductions_channel_id": "your-introductions-channel-id",
+  "welcome_message": "Hello {mention}! 👋 We're thrilled to have you join our community. Here are some resources to get you started:\n\n📚 Read the rules in <#{rules_channel_id}>\n📢 Check out our announcements in <#{announcements_channel_id}>\n🤝 Introduce yourself in <#{introductions_channel_id}>\n\nEnjoy your stay and feel free to reach out if you have any questions!",
+  "welcome_color": "0x5CDBF0",
+
+  "level_up_color": "0x5CDBF0",
+  "level_up_title": "🎉 Level Up!",
+  "level_up_message": "Congratulations {mention}, you've reached level {level}! Keep up the great work!",
+  "level_up_channel_id": "level_up_channel_id"
+
+
+}

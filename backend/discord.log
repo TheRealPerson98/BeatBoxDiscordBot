@@ -1,0 +1,11 @@
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Logged in as BeatBox
+[2023-11-01 19:32:09] [INFO    ] discord_bot: discord.py API version: 2.3.2
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Python version: 3.11.4
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Running on: Windows 10 (nt)
+[2023-11-01 19:32:09] [INFO    ] discord_bot: -------------------
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Loaded extension 'economy'
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Loaded extension 'event'
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Loaded extension 'moderation'
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Loaded extension 'owner'
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Loaded extension 'player'
+[2023-11-01 19:32:09] [INFO    ] discord_bot: Loaded extension 'template'
