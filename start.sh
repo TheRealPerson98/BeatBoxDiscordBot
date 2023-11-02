@@ -1,10 +1,16 @@
 #!/bin/bash
 
 # Start the bot
-gnome-terminal -- bash -c "cd backend && python main.py; exec bash"
+cd backend
+pip install -r requirements.txt
+python main.py &
 
 # Start the web app
-gnome-terminal -- bash -c "cd backend && python -m web.app; exec bash"
+cd backend
+pip install -r requirements.txt
+python -m web.app &
 
 # Start the React app
-gnome-terminal -- bash -c "cd frontend && npm start; exec bash"
+cd frontend
+npm install
+npm start &
