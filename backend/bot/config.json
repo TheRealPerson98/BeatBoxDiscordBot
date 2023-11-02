@@ -16,7 +16,46 @@
   "level_up_color": "0x5CDBF0",
   "level_up_title": "🎉 Level Up!",
   "level_up_message": "Congratulations {mention}, you've reached level {level}! Keep up the great work!",
-  "level_up_channel_id": "level_up_channel_id"
+  "level_up_channel_id": "level_up_channel_id",
+
+  "timer": {
+    "subcommand_description": "Please specify a subcommand.\n\n**Subcommands:**\n`add` - Add a timer.\n`delete` - Delete a timer.\n`view` - View a timer.",
+    "add": {
+      "title": "🕰️ Timer Added",
+      "description": "Duration: {duration} seconds"
+    },
+    "highlight": {
+      "title": "⏰ Timer Highlight",
+      "description": "Time remaining: {time} seconds"
+    },
+    "countdown": {
+      "title": "⏰ Timer Countdown",
+      "description": "{time}"
+    },
+    "up": {
+      "title": "🔔 Timer Up",
+      "description": "Time's up! 🎉🥳"
+    },
+    "delete": {
+      "title": "🗑️ Timer Deleted",
+      "description": "Timer has been deleted.",
+      "not_found_title": "🛑 Timer Not Found",
+      "not_found_description": "No timer found with the given ID."
+    },
+    "view": {
+      "title": "⏲️ Timer Details",
+      "description": "Duration: {duration} seconds",
+      "not_found_title": "🛑 Timer Not Found",
+      "not_found_description": "No timer found with the given ID."
+    },
+    "highlighted_times": [90, 75, 60, 45, 30, 15]
+  },
+  "colors": {
+    "success": "0x5CDBF0",
+    "error": "0xE02B2B",
+    "highlight": "0xFFD700",
+    "countdown": "0xF0E05C"
+  }
 
 
 }

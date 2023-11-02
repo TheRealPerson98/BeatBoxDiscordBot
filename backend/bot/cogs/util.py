@@ -24,8 +24,8 @@ class Util(commands.Cog, name="util"):
     async def timer(self, context: Context) -> None:
         if context.invoked_subcommand is None:
             embed = discord.Embed(
-                description="Please specify a subcommand.\n\n**Subcommands:**\n`add` - Add a timer.\n`delete` - Delete a timer.\n`view` - View a timer.",
-                color=0xE02B2B,
+                description=config['timer']['subcommand_description'],
+                color=int(config['colors']['error'], 16),
             )
             embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
             await context.send(embed=embed, ephemeral=True)
@@ -39,29 +39,36 @@ class Util(commands.Cog, name="util"):
         self.timers.append(timer)
 
         embed = discord.Embed(
-            title="🕰️ Timer Added",
-            description=f"Timer ID: {timer_id}\nDuration: {duration} seconds",
-            color=0x5CDBF0,
+            title=config['timer']['add']['title'],
+            description=config['timer']['add']['description'].format(timer_id=timer_id, duration=duration),
+            color=int(config['colors']['success'], 16),
         )
         embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
         await context.send(embed=embed)
 
-        await asyncio.sleep(duration - 10)
+        for i in range(duration, 0, -1):
+            if i in config['timer']['highlighted_times']:
+                embed = discord.Embed(
+                    title=config['timer']['highlight']['title'],
+                    description=config['timer']['highlight']['description'].format(time=i),
+                    color=int(config['colors']['highlight'], 16),
+                )
+                embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+                await context.send(embed=embed)
+            elif i <= 10:
+                embed = discord.Embed(
+                    title=config['timer']['countdown']['title'],
+                    description=str(i),
+                    color=int(config['colors']['countdown'], 16),
+                )
+                embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+                await context.send(embed=embed)
+            await asyncio.sleep(1)
 
         embed = discord.Embed(
-            title="⏰ Timer Countdown",
-            description=f"Timer ID: {timer_id}\nTime remaining: 10 seconds",
-            color=0xF0E05C,
-        )
-        embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
-        await context.send(embed=embed)
-
-        await asyncio.sleep(10)
-
-        embed = discord.Embed(
-            title="🔔 Timer Up",
-            description=f"Timer ID: {timer_id}\nTime's up!",
-            color=0xE02B2B,
+            title=config['timer']['up']['title'],
+            description=config['timer']['up']['description'],
+            color=int(config['colors']['error'], 16),
         )
         embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
         await context.send(embed=embed)
@@ -72,9 +79,9 @@ class Util(commands.Cog, name="util"):
         timer = next((t for t in self.timers if t.id == id and t.user_id == context.author.id), None)
         if timer is None:
             embed = discord.Embed(
-                title="🛑 Timer Not Found",
-                description="No timer found with the given ID.",
-                color=0xE02B2B,
+                title=config['timer']['delete']['not_found_title'],
+                description=config['timer']['delete']['not_found_description'],
+                color=int(config['colors']['error'], 16),
             )
             embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
             await context.send(embed=embed)
@@ -83,9 +90,9 @@ class Util(commands.Cog, name="util"):
         self.timers.remove(timer)
 
         embed = discord.Embed(
-            title="🗑️ Timer Deleted",
-            description=f"Timer ID: {id} has been deleted.",
-            color=0x5CDBF0,
+            title=config['timer']['delete']['title'],
+            description=config['timer']['delete']['description'].format(id=id),
+            color=int(config['colors']['success'], 16),
         )
         embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
         await context.send(embed=embed)
@@ -96,18 +103,18 @@ class Util(commands.Cog, name="util"):
         timer = next((t for t in self.timers if t.id == id and t.user_id == context.author.id), None)
         if timer is None:
             embed = discord.Embed(
-                title="🛑 Timer Not Found",
-                description="No timer found with the given ID.",
-                color=0xE02B2B,
+                title=config['timer']['view']['not_found_title'],
+                description=config['timer']['view']['not_found_description'],
+                color=int(config['colors']['error'], 16),
             )
             embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
             await context.send(embed=embed)
             return
 
         embed = discord.Embed(
-            title="⏲️ Timer Details",
-            description=f"Timer ID: {id}\nDuration: {timer.duration} seconds",
-            color=0x5CDBF0,
+            title=config['timer']['view']['title'],
+            description=config['timer']['view']['description'].format(id=id, duration=timer.duration),
+            color=int(config['colors']['success'], 16),
         )
         embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
         await context.send(embed=embed)
