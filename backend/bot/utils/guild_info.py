@@ -17,6 +17,8 @@ with open('bot/config.json', encoding='utf-8') as f:
 
 GUILD_ID = int(config['DISCORD_GUILD_ID'])
 
+
+
 async def update_guild_info(bot):
     guild = bot.get_guild(GUILD_ID)
     if guild:
