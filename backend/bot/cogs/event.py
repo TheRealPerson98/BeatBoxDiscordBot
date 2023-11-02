@@ -178,6 +178,9 @@ class Event(commands.Cog, name="event"):
 
     @event.command(name="delete", description="Delete an event.")
     @commands.has_permissions(manage_messages=True)
+    @app_commands.choices(
+        name=[app_commands.Choice(name=event[1], value=event[1]) for event in get_events()],
+    )
     @app_commands.describe(name="The name of the event to delete.")
     async def delete_event_command(self, context: commands.Context, name: str) -> None:
         role_id = delete_event(name)
@@ -225,10 +228,13 @@ class Event(commands.Cog, name="event"):
 
     @event.command(name="announce", description="Announce an event.")
     @commands.has_permissions(manage_messages=True)
-    @app_commands.choices(mention=[
-        app_commands.Choice(name="@everyone", value="everyone"),
-        app_commands.Choice(name="@here", value="here"),
-    ])
+    @app_commands.choices(
+        event_name=[app_commands.Choice(name=event[1], value=event[1]) for event in get_events()],
+        mention=[
+            app_commands.Choice(name="@everyone", value="everyone"),
+            app_commands.Choice(name="@here", value="here"),
+        ],
+    )
     @app_commands.describe(event_name="The name of the event to announce.", mention="Who to mention in the announcement.", title="The title of the announcement.", description="The description of the announcement.", image="The image to include in the announcement.", include_buttons="Whether to include the Join and Leave Queue buttons.")
     async def announce_event_command(self, context: commands.Context, event_name: str, mention: str, title: str, description: str, image: discord.Attachment, include_buttons: bool) -> None:
         events = get_events()
@@ -268,6 +274,9 @@ class Event(commands.Cog, name="event"):
             
     @event.command(name="showqueue", description="Show the queue for an event.")
     @commands.has_permissions(manage_messages=True)
+    @app_commands.choices(
+        event_name=[app_commands.Choice(name=event[1], value=event[1]) for event in get_events()],
+    )
     @app_commands.describe(event_name="The name of the event.", silent="Whether to show the queue silently.")
     async def show_queue_command(self, context: commands.Context, event_name: str, silent: bool) -> None:
         events = get_events()
@@ -278,6 +287,7 @@ class Event(commands.Cog, name="event"):
                 description="The event you are trying to announce could not be found. Please check the event name and try again.",
                 color=0xE02B2B,  # Red color
             )
+            embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
             await context.send(embed=embed, ephemeral=True)
             return
         
@@ -289,6 +299,7 @@ class Event(commands.Cog, name="event"):
                 description="The role for the event could not be found. Please check the event configuration.",
                 color=0xE02B2B,  # Red color
             )
+            embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
             await context.send(embed=embed, ephemeral=True)
             return
         
@@ -299,6 +310,7 @@ class Event(commands.Cog, name="event"):
                 description="There are no members in the queue for this event.",
                 color=0xE02B2B,  # Red color
             )
+            embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
             await context.send(embed=embed, ephemeral=silent)
             return
         
@@ -309,8 +321,8 @@ class Event(commands.Cog, name="event"):
                 color=0x5CDBF0,  # Light blue color
             )
             page_members = members[i:i + 25]
-            for member in page_members:
-                embed.add_field(name=member.mention, value="\u200b", inline=True)
+            member_mentions = "\n".join(member.mention for member in page_members)
+            embed.description = member_mentions
             pages.append(embed)
         
         view = QueueView(self.bot, pages)
