@@ -5,7 +5,7 @@ from bot.db import add_coins, get_daily_usage, set_daily_usage, get_level, get_l
 from bot.utils.level_utils import LevelUtils
 from discord.ext.commands import Context
 from bot.db import get_leaderboard
-from bot.utils.leaderboardview import LeaderboardView
+from bot.utils.stuffwithpages.leaderboardview import LeaderboardView
 from random import choice
 import asyncio
 from discord.ext import commands

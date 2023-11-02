@@ -8,7 +8,9 @@ import pytz
 import asyncio
 from discord.ui import Button
 import json
-from discord.ext import commands, pages
+from discord.ext import commands
+from bot.utils.stuffwithpages.showqueueview import QueueView
+from bot.utils.buttons.eventrolebutton import RoleButton
 
 with open('bot/config.json', encoding='utf-8') as f:
     config = json.load(f)
@@ -262,56 +264,61 @@ class Event(commands.Cog, name="event"):
             await context.send(embed=embed, view=RoleButton(role_id))
         else:
             await context.send(embed=embed)
-
-
-
-
-class RoleButton(discord.ui.View):
-    def __init__(self, role_id: int):
-        super().__init__()
-        self.role_id = role_id
-        
-    @discord.ui.button(label="Join Queue", style=discord.ButtonStyle.green, custom_id="join_queue")
-    async def join_queue(self, interaction: discord.Interaction, button: discord.ui.Button):
-        role = interaction.guild.get_role(self.role_id)
-        if role is None:
-            print(f"Role not found with ID: {self.role_id}")
+            
+            
+    @event.command(name="showqueue", description="Show the queue for an event.")
+    @commands.has_permissions(manage_messages=True)
+    @app_commands.describe(event_name="The name of the event.", silent="Whether to show the queue silently.")
+    async def show_queue_command(self, context: commands.Context, event_name: str, silent: bool) -> None:
+        events = get_events()
+        event = next((e for e in events if e[1] == event_name), None)
+        if event is None:
             embed = discord.Embed(
-                title="Error",
-                description="Role not found.",
-                color=discord.Color.red(),
+                title="🛑 Event Not Found",
+                description="The event you are trying to announce could not be found. Please check the event name and try again.",
+                color=0xE02B2B,  # Red color
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await context.send(embed=embed, ephemeral=True)
             return
-
-        await interaction.user.add_roles(role)
-        embed = discord.Embed(
-            title="Joined Queue",
-            description="You have successfully joined the queue.",
-            color=discord.Color.green(),
-        )
-        await interaction.response.send_message(embed=embed, ephemeral=True)
-
-
-    @discord.ui.button(label="Leave Queue", style=discord.ButtonStyle.red, custom_id="leave_queue")
-    async def leave_queue(self, interaction: discord.Interaction, button: discord.ui.Button):
-        role = interaction.guild.get_role(self.role_id)
-        if role in interaction.user.roles:
-            await interaction.user.remove_roles(role)
+        
+        _, _, _, _, _, role_id = event
+        role = context.guild.get_role(role_id)
+        if role is None:
             embed = discord.Embed(
-                title="Left Queue",
-                description="You have successfully left the queue.",
-                color=discord.Color.green(),
+                title="🛑 Role Not Found",
+                description="The role for the event could not be found. Please check the event configuration.",
+                color=0xE02B2B,  # Red color
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-        else:
+            await context.send(embed=embed, ephemeral=True)
+            return
+        
+        members = role.members
+        if not members:
             embed = discord.Embed(
-                title="Not in Queue",
-                description="You are not in the queue.",
-                color=discord.Color.red(),
+                title="Queue is Empty",
+                description="There are no members in the queue for this event.",
+                color=0xE02B2B,  # Red color
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await context.send(embed=embed, ephemeral=silent)
+            return
+        
+        pages = []
+        for i in range(0, len(members), 25):
+            embed = discord.Embed(
+                title=f"Queue for {event_name}",
+                color=0x5CDBF0,  # Light blue color
+            )
+            page_members = members[i:i + 25]
+            for member in page_members:
+                embed.add_field(name=member.mention, value="\u200b", inline=True)
+            pages.append(embed)
+        
+        view = QueueView(self.bot, pages)
+        message = await context.send(embed=pages[0], view=view, ephemeral=silent)
+        view.message = message
 
+
+        
         
         
 async def setup(bot) -> None:

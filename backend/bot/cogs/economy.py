@@ -4,7 +4,7 @@ from discord.ext import commands
 from bot.db import add_coins, remove_coins, get_coins
 from discord.ext.commands import Context
 from bot.db import get_leaderboard
-from bot.utils.leaderboardview import LeaderboardView
+from bot.utils.stuffwithpages.leaderboardview import LeaderboardView
 from random import choice
 import asyncio
 import json
