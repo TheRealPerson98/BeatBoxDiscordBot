@@ -8,7 +8,6 @@ class CookieUtil {
         const roleCookies = document.cookie.split('; ').filter(row => row.startsWith('role_'));
         const fetchedRoles = roleCookies.map(cookie => cookie.split('=')[0].replace('role_', ''));
 
-        console.log(fetchedRoles);
         return fetchedRoles;
     }
 }
