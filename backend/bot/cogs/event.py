@@ -1,16 +1,16 @@
 import discord
-from discord import app_commands, Embed, ButtonStyle, ui
+from discord import app_commands
 from discord.ext import commands
 from bot.db import add_event, get_events, delete_event
 from discord.ext.commands import Context
-from datetime import datetime, timedelta
-import pytz  
+from datetime import datetime
 import asyncio
-from discord.ui import Button
 import json
 from discord.ext import commands
 from bot.utils.stuffwithpages.showqueueview import QueueView
 from bot.utils.buttons.eventrolebutton import RoleButton
+import logging
+
 
 with open('bot/config.json', encoding='utf-8') as f:
     config = json.load(f)
@@ -330,7 +330,9 @@ class Event(commands.Cog, name="event"):
         view.message = message
 
 
-        
+
+
+
         
         
 async def setup(bot) -> None:

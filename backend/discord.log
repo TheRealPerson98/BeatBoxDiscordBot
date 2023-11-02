@@ -1,14 +1,12 @@
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Logged in as BeatBox
-[2023-11-01 20:14:04] [INFO    ] discord_bot: discord.py API version: 2.3.2
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Python version: 3.11.4
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Running on: Windows 10 (nt)
-[2023-11-01 20:14:04] [INFO    ] discord_bot: -------------------
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Loaded extension 'economy'
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Loaded extension 'event'
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Loaded extension 'moderation'
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Loaded extension 'owner'
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Loaded extension 'player'
-[2023-11-01 20:14:04] [INFO    ] discord_bot: Loaded extension 'template'
-[2023-11-01 20:14:08] [INFO    ] discord_bot: Executed event command in Person98 Was Here (ID: 1152659783439097966) by person98 (ID: 292733309488857088)
-[2023-11-01 20:14:17] [INFO    ] discord_bot: Executed sync command in Person98 Was Here (ID: 1152659783439097966) by person98 (ID: 292733309488857088)
-[2023-11-01 20:14:30] [INFO    ] discord_bot: Executed event command in Person98 Was Here (ID: 1152659783439097966) by person98 (ID: 292733309488857088)
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Logged in as BeatBox
+[2023-11-01 20:57:05] [INFO    ] discord_bot: discord.py API version: 2.3.2
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Python version: 3.11.4
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Running on: Windows 10 (nt)
+[2023-11-01 20:57:05] [INFO    ] discord_bot: -------------------
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'economy'
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'event'
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'moderation'
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'owner'
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'player'
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'template'
+[2023-11-01 20:57:05] [INFO    ] discord_bot: Loaded extension 'util'

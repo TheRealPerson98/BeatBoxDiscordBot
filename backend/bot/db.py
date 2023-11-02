@@ -62,6 +62,7 @@ def get_events():
         c.execute("SELECT * FROM events")
         events = c.fetchall()
         return events
+    
         
 def get_message_count(user_id):
     with sqlite3.connect('members.db') as conn:
