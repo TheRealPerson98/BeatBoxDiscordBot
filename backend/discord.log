@@ -1,13 +1,18 @@
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Logged in as BeatBox
-[2023-11-02 11:51:48] [INFO    ] discord_bot: discord.py API version: 2.3.2
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Python version: 3.11.4
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Running on: Windows 10 (nt)
-[2023-11-02 11:51:48] [INFO    ] discord_bot: -------------------
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'economy'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'event'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'help'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'moderation'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'owner'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'player'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'template'
-[2023-11-02 11:51:48] [INFO    ] discord_bot: Loaded extension 'util'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Logged in as BeatBox
+[2023-11-02 17:38:31] [INFO    ] discord_bot: discord.py API version: 2.3.2
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Python version: 3.11.4
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Running on: Windows 10 (nt)
+[2023-11-02 17:38:31] [INFO    ] discord_bot: -------------------
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'economy'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'event'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'help'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'moderation'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'owner'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'player'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'template'
+[2023-11-02 17:38:31] [INFO    ] discord_bot: Loaded extension 'util'
+[2023-11-02 17:38:33] [INFO    ] discord_bot: Guild found: Person98 Was Here
+[2023-11-02 17:38:33] [INFO    ] discord_bot: Doing bans
+[2023-11-02 17:38:33] [INFO    ] discord_bot: []
+[2023-11-02 17:38:33] [INFO    ] discord_bot: [(754244132741840959, 'chills_bbx', None, 'BEATBOX TOP 8, Top 8, tester', 'offline', '2023-10-18 23:31:39.793000+00:00', '2020-09-12 07:36:54.424000+00:00', 'tester'), (422843158754361344, 'duzzee', None, 'tester', 'offline', '2023-10-19 00:19:05.006000+00:00', '2018-03-12 19:47:45.093000+00:00', 'tester'), (292733309488857088, 'person98', None, 'Test123, Top 8, Admin', 'offline', '2023-09-16 17:38:27.768000+00:00', '2017-03-18 18:57:39.704000+00:00', 'Admin')]
+[2023-11-02 17:38:33] [INFO    ] discord_bot: Members list updated with 3 members.

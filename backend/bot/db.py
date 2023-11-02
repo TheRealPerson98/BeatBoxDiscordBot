@@ -7,7 +7,9 @@ def create_tables():
         c = conn.cursor()
         # For members
         c.execute('''CREATE TABLE IF NOT EXISTS members 
-                     (name TEXT, nickname TEXT, role TEXT)''')
+                    (id TEXT PRIMARY KEY, name TEXT, nickname TEXT, role TEXT, status TEXT, 
+                    joined_at TEXT, created_at TEXT, top_role TEXT)''')
+
         # For storing guild name
         c.execute('''CREATE TABLE IF NOT EXISTS guild_info 
                      (key TEXT PRIMARY KEY, value TEXT)''')
@@ -34,9 +36,31 @@ def create_tables():
         c.execute('''CREATE TABLE IF NOT EXISTS events
                     (event_id INTEGER PRIMARY KEY, name TEXT, 
                     date_and_time TEXT, reward TEXT, timezone TEXT, role_id INTEGER)''')
-
+        
+        c.execute('''CREATE TABLE IF NOT EXISTS ban_queue
+                     (user_id INTEGER PRIMARY KEY, reason TEXT)''')
 
         conn.commit()
+
+
+def add_to_ban_queue(user_id, reason):
+    with sqlite3.connect('members.db') as conn:
+        c = conn.cursor()
+        c.execute("INSERT OR REPLACE INTO ban_queue (user_id, reason) VALUES (?, ?)", (user_id, reason))
+        conn.commit()
+
+def remove_from_ban_queue(user_id):
+    with sqlite3.connect('members.db') as conn:
+        c = conn.cursor()
+        c.execute("DELETE FROM ban_queue WHERE user_id = ?", (user_id,))
+        conn.commit()
+
+def get_ban_queue():
+    with sqlite3.connect('members.db') as conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM ban_queue")
+        return c.fetchall()
+
 
 # Update your add_event function
 def add_event(name, date_and_time, reward, timezone, role_id):
@@ -138,15 +162,22 @@ def update_members_db(members_data):
     with sqlite3.connect('members.db') as conn:
         c = conn.cursor()
         c.execute("DELETE FROM members")  # Remove existing records
-        c.executemany("INSERT INTO members (name, nickname, role) VALUES (?, ?, ?)", members_data)
+        c.executemany("INSERT INTO members (id, name, nickname, role, status, joined_at, created_at, top_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", members_data)
         conn.commit()
 
 def fetch_members():
     with sqlite3.connect('members.db') as conn:
         c = conn.cursor()
-        c.execute("SELECT name, nickname, role FROM members")
+        c.execute("SELECT id, name, nickname, role, status, joined_at, created_at, top_role FROM members")
         return c.fetchall()
-    
+
+def remove_from_members(user_id):
+    conn = sqlite3.connect('your_database.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM members WHERE id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+
 def update_guild_name(guild_name):
     with sqlite3.connect('members.db') as conn:
         c = conn.cursor()

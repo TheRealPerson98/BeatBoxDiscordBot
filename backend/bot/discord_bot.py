@@ -11,7 +11,8 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from dotenv import load_dotenv
-from bot.db import update_members_db, create_tables, update_guild_name, get_last_message_time, set_last_message_time, update_message_count, get_level
+from bot.db import create_tables, get_last_message_time, set_last_message_time, update_message_count, get_level,get_ban_queue, remove_from_ban_queue, remove_from_members
+from bot.utils.ban import perform_ban_web
 from config import logger
 from bot.utils.guild_info import update_guild_info
 import asyncio
@@ -22,9 +23,7 @@ from datetime import timezone
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-GUILD_ID = int(os.getenv("DISCORD_GUILD_ID", "0"))
-WELCOME_CHANNEL_ID = int(os.getenv("WELCOME_CHANNEL_ID", "0"))
-LEVEL_UP_CHANNEL_ID = int(os.getenv("LEVEL_UP_CHANNEL_ID", "0"))
+
 
 if not os.path.isfile(f"{os.path.realpath(os.path.dirname(__file__))}/config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
@@ -100,6 +99,7 @@ class DiscordBot(commands.Bot):
         - self.bot.config # In cogs
         """
         self.logger = logger
+        self.guild = None
 
     async def load_cogs(self) -> None:
         """
@@ -120,6 +120,7 @@ class DiscordBot(commands.Bot):
     @tasks.loop(minutes=1.0)
     async def update_members_task(self) -> None:
         await update_guild_info(bot)
+        
 
             
     @update_members_task.before_loop
@@ -143,7 +144,36 @@ class DiscordBot(commands.Bot):
         Before starting the status changing task, we make sure the bot is ready
         """
         await self.wait_until_ready()
+        
+        
+    @tasks.loop(minutes=1.0)
+    async def ban_task(self) -> None:
+        """
+        Ban users from the ban queue.
+        """
+        self.logger.info("Doing bans")
+        if self.guild is None:
+            self.logger.error("Guild is None!")
+            return  # Exit early if guild is None
+        
+        queue = get_ban_queue()  # Function to get the ban queue from the database
+        self.logger.info(queue)
+        for user_id, reason in queue:
+            await perform_ban_web(self, user_id, reason)  # Function to ban the user
+            remove_from_ban_queue(user_id)  # Function to remove the user from the ban queue
+            remove_from_members(user_id)  # Function to remove the user from the members table
 
+
+
+
+    @ban_task.before_loop
+    async def before_status_task(self) -> None:
+        """
+        Before starting the ban task, we make sure the bot is ready.
+        """
+        await self.wait_until_ready()
+        
+        
     async def setup_hook(self) -> None:
         """
         This will just be executed when the bot starts the first time.
@@ -156,9 +186,11 @@ class DiscordBot(commands.Bot):
             f"Running on: {platform.system()} {platform.release()} ({os.name})"
         )
         self.logger.info("-------------------")
+        
         await self.load_cogs()
         self.status_task.start()
         self.update_members_task.start()
+        self.ban_task.start()
 
     async def on_message(self, message: discord.Message) -> None:
         if message.author == self.user or message.author.bot:
@@ -206,7 +238,14 @@ class DiscordBot(commands.Bot):
 
         await self.process_commands(message)
 
-
+    async def on_ready(self):
+        # When the bot is ready, set the guild attribute to the appropriate value
+        guild_id = int(config['DISCORD_GUILD_ID'])  # Convert guild ID to integer
+        self.guild = self.get_guild(guild_id)
+        if self.guild is None:
+            self.logger.error("Guild not found!")
+        else:
+            self.logger.info("Guild found: %s", self.guild.name)
 
 
     async def on_member_join(self, member):
@@ -235,6 +274,10 @@ class DiscordBot(commands.Bot):
             embed.set_footer(text=f"User ID: {member.id} • Joined on {member.joined_at.strftime('%B %d, %Y')}")
 
             await channel.send(embed=embed)
+            
+    async def on_member_remove(self, member):
+        self.logger.info(f"Member {member} has left the server.")
+        remove_from_members(str(member.id))  # Remove the member from the members table
 
 
     async def on_command_completion(self, context: Context) -> None:

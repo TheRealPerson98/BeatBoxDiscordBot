@@ -33,3 +33,13 @@ async def perform_ban(context, user, reason="Not specified", silent=True):
             color=0xE02B2B,
         )
         await context.send(embed=embed, ephemeral=silent)
+        
+        
+async def perform_ban_web(bot, user_id, reason):
+    member = bot.guild.get_member(user_id) or await bot.guild.fetch_member(user_id)
+    if member is not None:
+        await bot.guild.ban(member, reason=reason)
+    else:
+        bot.logger.error("Member not found: %s", user_id)
+
+        

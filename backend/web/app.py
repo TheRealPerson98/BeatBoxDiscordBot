@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify, make_response, redirect
 import discordoauth2
-from bot.db import fetch_members
+from bot.db import fetch_members, add_to_ban_queue
 from config import logger
 import requests
 from dotenv import load_dotenv
 import os
 from flask_cors import CORS
 import json
+
 load_dotenv()
 with open('bot/config.json', encoding='utf-8') as f:
     config = json.load(f)
@@ -24,6 +25,7 @@ client = discordoauth2.Client(CLIENT_ID, secret=SECRET, redirect=REDIRECT_URI)
 
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route('/auth/discord')
 def discord_auth():
@@ -67,6 +69,37 @@ def fetch_guild_member(token, guild_id):
         "authorization": f"Bearer {token}"
     })
     return response.json() if response.ok else {}
+
+@app.route('/mute', methods=['POST'])
+def mute():
+    # Logic for muting a member
+    # TODO: Add your logic here
+    return jsonify({"status": "success", "message": "Member muted"})
+
+@app.route('/ban', methods=['POST'])
+def ban():
+    user_id = request.json.get('user_id')
+    reason = request.json.get('reason', 'Not specified')
+    
+    if not user_id:
+        return jsonify({"status": "fail", "message": "User ID is required"})
+    
+    print("Received user ID from client:", user_id)  # Log the user ID
+    add_to_ban_queue(user_id, reason)
+    
+    return jsonify({"status": "success", "message": "Member added to ban queue"})
+
+
+
+
+
+
+
+@app.route('/kick', methods=['POST'])
+def kick():
+    # Logic for kicking a member
+    # TODO: Add your logic here
+    return jsonify({"status": "success", "message": "Member kicked"})
 
 def fetch_guild_roles():
     """Fetches all roles from the Discord server."""

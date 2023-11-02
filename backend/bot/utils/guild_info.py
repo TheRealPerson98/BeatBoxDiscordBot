@@ -19,6 +19,8 @@ GUILD_ID = int(config['DISCORD_GUILD_ID'])
 
 
 
+# guild_info.py
+
 async def update_guild_info(bot):
     guild = bot.get_guild(GUILD_ID)
     if guild:
@@ -29,9 +31,23 @@ async def update_guild_info(bot):
             if not member.bot:
                 roles = [role.name for role in member.roles if role.name != "@everyone"]
                 role_str = ', '.join(roles) if roles else None
-                members_data.append((member.name, member.nick, role_str))
+                
+                members_data.append((
+                    member.id,
+                    member.name,
+                    member.nick,
+                    role_str,
+                    str(member.status),
+                    str(member.joined_at),
+                    str(member.created_at),
+                    str(member.top_role.name)
+                ))
+                
         update_guild_name(guild.name)
         update_members_db(members_data)
-        logger.info(f"Members list updated with {len(members_data)} members.")
+        bot.logger.info(members_data)
+        bot.logger.info(f"Members list updated with {len(members_data)} members.")
     else:
-        logger.warning("Couldn't find the guild.")
+        bot.logger.warning("Couldn't find the guild.")
+
+
