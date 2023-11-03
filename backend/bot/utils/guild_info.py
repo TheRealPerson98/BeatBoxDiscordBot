@@ -45,8 +45,6 @@ async def update_guild_info(bot):
                 
         update_guild_name(guild.name)
         update_members_db(members_data)
-        bot.logger.info(members_data)
-        bot.logger.info(f"Members list updated with {len(members_data)} members.")
     else:
         bot.logger.warning("Couldn't find the guild.")
 

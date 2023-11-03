@@ -146,7 +146,7 @@ class DiscordBot(commands.Bot):
         await self.wait_until_ready()
         
         
-    @tasks.loop(minutes=1.0)
+    @tasks.loop(minutes=0.1)
     async def ban_task(self) -> None:
         """
         Ban users from the ban queue.

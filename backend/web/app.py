@@ -45,6 +45,7 @@ def oauth2_callback():
     my_guild = next((g for g in guilds if g["id"] == str(GUILD_ID)), None)  # Note the conversion to string here
     
     if not my_guild:
+        logger.error(GUILD_ID)
         logger.error("User is not part of the expected guild.")
         return redirect(FRONTEND_URI)
 

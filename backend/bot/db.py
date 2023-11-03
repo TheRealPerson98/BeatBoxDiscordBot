@@ -6,9 +6,11 @@ def create_tables():
     with sqlite3.connect('members.db') as conn:
         c = conn.cursor()
         # For members
+        
         c.execute('''CREATE TABLE IF NOT EXISTS members 
                     (id TEXT PRIMARY KEY, name TEXT, nickname TEXT, role TEXT, status TEXT, 
                     joined_at TEXT, created_at TEXT, top_role TEXT)''')
+
 
         # For storing guild name
         c.execute('''CREATE TABLE IF NOT EXISTS guild_info 
@@ -23,6 +25,9 @@ def create_tables():
         
         c.execute('''CREATE TABLE IF NOT EXISTS coins
                      (user_id INTEGER PRIMARY KEY, amount INTEGER)''')
+        
+        c.execute('''CREATE TABLE IF NOT EXISTS event_stats
+                     (user_id INTEGER PRIMARY KEY, wins INTEGER, event_coins INTEGER)''')
         
         c.execute('''CREATE TABLE IF NOT EXISTS daily_usage
                      (user_id INTEGER PRIMARY KEY, last_used TEXT)''')
@@ -41,6 +46,57 @@ def create_tables():
                      (user_id INTEGER PRIMARY KEY, reason TEXT)''')
 
         conn.commit()
+
+
+def add_event_win(user_id):
+    conn = sqlite3.connect('members.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM event_stats WHERE user_id = ?", (user_id,))
+    user = c.fetchone()
+    if user is None:
+        c.execute("INSERT INTO event_stats (user_id, wins, event_coins) VALUES (?, 1, 0)", (user_id,))
+    else:
+        c.execute("UPDATE event_stats SET wins = wins + 1 WHERE user_id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+
+def add_event_coins(user_id, coins):
+    conn = sqlite3.connect('members.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM event_stats WHERE user_id = ?", (user_id,))
+    user = c.fetchone()
+    if user is None:
+        c.execute("INSERT INTO event_stats (user_id, wins, event_coins) VALUES (?, 0, ?)", (user_id, coins))
+    else:
+        c.execute("UPDATE event_stats SET event_coins = event_coins + ? WHERE user_id = ?", (coins, user_id))
+    conn.commit()
+    conn.close()
+
+
+def remove_event_coins(user_id, coins):
+    conn = sqlite3.connect('members.db')
+    c = conn.cursor()
+    c.execute("UPDATE event_stats SET event_coins = event_coins - ? WHERE user_id = ?", (coins, user_id))
+    conn.commit()
+    conn.close()
+
+
+def remove_event_win(user_id):
+    conn = sqlite3.connect('members.db')
+    c = conn.cursor()
+    c.execute("UPDATE event_stats SET wins = wins - 1 WHERE user_id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+
+def get_event_stats(user_id):
+    conn = sqlite3.connect('members.db')
+    c = conn.cursor()
+    c.execute("SELECT wins, event_coins FROM event_stats WHERE user_id = ?", (user_id,))
+    result = c.fetchone()
+    conn.close()
+    if result is None:
+        return 0, 0
+    return result
 
 
 def add_to_ban_queue(user_id, reason):

@@ -57,6 +57,12 @@ class HelpCommand(commands.Cog):
                 embed.add_field(name="/event delete", value="Delete an event.", inline=False)
                 embed.add_field(name="/event announce", value="Announce an event.", inline=False)
                 embed.add_field(name="/event showqueue", value="Show the event queue.", inline=False)
+                embed.add_field(name="/event addcoins", value="Add coins to a user's balance for the event.", inline=False)
+                embed.add_field(name="/event removecoins", value="Remove coins from a user's balance for the event.", inline=False)
+                embed.add_field(name="/event addwin", value="Add a win to a user's record for the event.", inline=False)
+                embed.add_field(name="/event removewin", value="Remove a win from a user's record for the event.", inline=False)
+                embed.add_field(name="/event stats", value="Show a user's stats for the event.", inline=False)
+
             elif category == "Moderation":
                 embed.add_field(name="/kick", value="Kick a user from the server.", inline=False)
                 embed.add_field(name="/mute", value="Mute a user in the server.", inline=False)

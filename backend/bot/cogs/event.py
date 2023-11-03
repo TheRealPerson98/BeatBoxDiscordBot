@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from bot.db import add_event, get_events, delete_event
+from bot.db import add_event, get_events, delete_event, remove_event_win, add_event_win, get_event_stats, add_event_coins, remove_event_coins
 from discord.ext.commands import Context
 from datetime import datetime
 import asyncio
@@ -29,7 +29,81 @@ class Event(commands.Cog, name="event"):
                 color=0xE02B2B,
             )
             await context.send(embed=embed, ephemeral=True)
+    @event.command(name="addcoins", description="Adds coins to a user's balance.")
+    @commands.has_permissions(manage_messages=True)
+    @app_commands.describe(user="The user that should receive coins.", amount="The amount of coins to add.")
+    async def add_coins_command(self, context: commands.Context, user: discord.User, amount: int) -> None:
+        add_event_coins(user.id, amount)
+        embed = discord.Embed(
+            title="🎉 Success!",
+            description=f"**Added {amount} coins** to **{user.name}'s** balance.",
+            color=0x5CDBF0,  # Light blue color
+        )
+        embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+        await context.send(embed=embed, ephemeral=True)
 
+    @event.command(name="removecoins", description="Removes coins from a user's balance.")
+    @commands.has_permissions(manage_messages=True)
+    @app_commands.describe(user="The user that should lose coins.", amount="The amount of coins to remove.")
+    async def remove_coins_command(self, context: commands.Context, user: discord.User, amount: int) -> None:
+        remove_event_coins(user.id, amount)
+        embed = discord.Embed(
+            title="💸 Coins Removed",
+            description=f"**Removed {amount} coins** from **{user.name}'s** balance.",
+            color=0xE02B2B,  # Red color
+        )
+        embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+        embed.set_thumbnail(url="https://i.imgur.com/uIb860p.png")
+        await context.send(embed=embed, ephemeral=True)
+
+    @event.command(name="addwin", description="Adds a win to a user's stats.")
+    @commands.has_permissions(manage_messages=True)
+    @app_commands.describe(user="The user that should receive a win.")
+    async def add_win_command(self, context: commands.Context, user: discord.User) -> None:
+        add_event_win(user.id)
+        embed = discord.Embed(
+            title="🏆 Win Added",
+            description=f"**Added a win** to **{user.name}'s** stats.",
+            color=0x5CDBF0,  # Light blue color
+        )
+        embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+        await context.send(embed=embed, ephemeral=True)
+
+    @event.command(name="removewin", description="Removes a win from a user's stats.")
+    @commands.has_permissions(manage_messages=True)
+    @app_commands.describe(user="The user that should lose a win.")
+    async def remove_win_command(self, context: commands.Context, user: discord.User) -> None:
+        remove_event_win(user.id)
+        embed = discord.Embed(
+            title="🏆 Win Removed",
+            description=f"**Removed a win** from **{user.name}'s** stats.",
+            color=0xE02B2B,  # Red color
+        )
+        embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+        await context.send(embed=embed, ephemeral=True)
+
+    @event.command(name="stats", description="Displays the event stats of a user.")
+    @app_commands.describe(user="The user you want to get the stats of.")
+    async def stats_command(self, context: commands.Context, user: discord.User = None) -> None:
+        if user is None:
+            user = context.author
+        wins, coins = get_event_stats(user.id)
+        embed = discord.Embed(
+            title="📊 Event Stats",
+            description=f"**{user.name}'s** event stats:\nWins: **{wins}**\nCoins: **{coins}**.",
+            color=0xF0E05C,  # Yellow color
+        )
+        embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
+        await context.send(embed=embed, ephemeral=True)
+
+            
+            
+            
+            
+            
+            
+            
+            
     @event.command(name="register", description="Register a new event.")
     @commands.has_permissions(manage_messages=True)
     async def register_event_command(self, context: commands.Context) -> None:

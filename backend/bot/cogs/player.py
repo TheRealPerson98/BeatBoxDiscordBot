@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from bot.db import add_coins, get_daily_usage, set_daily_usage, get_level, get_level_and_xp, get_coins, get_message_count
+from bot.db import add_coins, get_daily_usage, set_daily_usage, get_level, get_level_and_xp, get_coins, get_message_count, get_event_stats
 from bot.utils.level_utils import LevelUtils
 from discord.ext.commands import Context
 from bot.db import get_leaderboard
@@ -80,6 +80,7 @@ class Player(commands.Cog, name="player"):
         now = datetime.now().astimezone()
 
         coin_balance = get_coins(user_id)
+        event_wins, event_coins = get_event_stats(user_id)
         message_count = get_message_count(user_id)
         if last_used is not None:
             last_used = datetime.strptime(last_used, '%Y-%m-%d %H:%M:%S').replace(tzinfo=utc)
@@ -110,6 +111,8 @@ class Player(commands.Cog, name="player"):
         embed.add_field(name="📊 Progress", value=progress_bar, inline=True)
         embed.add_field(name="🎁 Next Daily Reward", value=time_until_next_daily, inline=True)
         embed.add_field(name="💰 Coin Balance", value=coin_balance, inline=True)
+        embed.add_field(name="🎉 Event Wins", value=event_wins, inline=True)
+        embed.add_field(name="💰 Event Coins", value=event_coins, inline=True)
         embed.add_field(name="💌 Total Messages Sent", value=message_count, inline=True)
         embed.set_footer(text=config['bot_name'], icon_url=config['bot_icon_url'])
 
@@ -117,6 +120,7 @@ class Player(commands.Cog, name="player"):
             await ctx.send(embed=embed)
         elif isinstance(ctx, discord.Interaction):
             await ctx.response.send_message(embed=embed)
+
 
 
 
